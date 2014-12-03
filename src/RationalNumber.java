@@ -2,6 +2,7 @@
 //Casey Rounseville
 //9O
 //12-2-2014
+import java.lang.Math;
 public class RationalNumber
 {
   int numerator;
@@ -13,17 +14,17 @@ public class RationalNumber
   }
   public RationalNumber(int num1,int num2)
   {
-    if(num2==0)
-    {
-      num2=1;
-    }
-    if(num2<0)
-    {
-      num1*=-1;
-      num2*=-1;
-    }
     numerator=num1;
     denominator=num2;
+    if(denominator==0)
+    {
+      denominator=1;
+    }
+    if(denominator<0)
+    {
+      numerator*=-1;
+      denominator=Math.abs(denominator);
+    }
   }
   public int getDenominator()
   {
@@ -47,6 +48,10 @@ public class RationalNumber
   public String toString()
   {
     int gcd=greatestCommonDivisor(numerator,denominator);
+    if(gcd<0)
+    {
+      gcd=Math.abs(gcd);
+    }
     numerator/=gcd;
     denominator/=gcd;
     String fraction=numerator+"/"+denominator;
@@ -58,33 +63,26 @@ public class RationalNumber
   }
   public void add(RationalNumber frac)
   {
-    int commonDenominator=denominator*frac.denominator;
+    int temp=denominator;
+    denominator*=frac.denominator;
     numerator*=frac.denominator;
-    frac.numerator*=denominator;
+    frac.numerator*=temp;
+    frac.denominator=denominator;
     numerator+=frac.numerator;
-    int gcd=greatestCommonDivisor(numerator,commonDenominator);
-    numerator/=gcd;
-    commonDenominator/=gcd;
-    denominator=commonDenominator;
   }
   public void subtract(RationalNumber frac)
   {
-    int commonDenominator=denominator*frac.denominator;
+    int temp=denominator;
+    denominator*=frac.denominator;
     numerator*=frac.denominator;
-    frac.numerator*=denominator;
+    frac.numerator*=temp;
+    frac.denominator=denominator;
     numerator-=frac.numerator;
-    int gcd=greatestCommonDivisor(numerator,commonDenominator);
-    numerator/=gcd;
-    commonDenominator/=gcd;
-    denominator=commonDenominator;
   }
   public void multiply(RationalNumber frac)
   {
     numerator*=frac.numerator;
     denominator*=frac.denominator;
-    int gcd=greatestCommonDivisor(numerator,denominator);
-    numerator/=gcd;
-    denominator/=gcd;
   }
   public void divide(RationalNumber frac)
   {
@@ -92,8 +90,5 @@ public class RationalNumber
     frac.numerator=frac.denominator;
     frac.denominator=temp;
     multiply(frac);
-    int gcd=greatestCommonDivisor(numerator,denominator);
-    numerator/=gcd;
-    denominator/=gcd;
   }
 }
